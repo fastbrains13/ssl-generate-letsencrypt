@@ -26,7 +26,7 @@ error() { echo -e "${RED}✗${NC} $1"; }
 warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 
 # Получение домена
-read -p "Введите домен для SSL Generator (например: example.com): " DOMAIN
+read -p "Введите домен для SSL Generator (например: ssl.example.com): " DOMAIN
 
 if [ -z "$DOMAIN" ]; then
     error "Домен не указан!"
