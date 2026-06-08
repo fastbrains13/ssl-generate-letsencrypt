@@ -478,7 +478,7 @@ try {
         /* Container */
         .container {
             max-width: 900px;
-            margin: -40px auto 40px;
+            margin: 40px auto 40px;
             padding: 0 20px;
             position: relative;
             z-index: 10;
