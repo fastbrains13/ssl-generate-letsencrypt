@@ -55,18 +55,18 @@ echo ""
 # Шаг 1: Обновление системы
 log "Обновление системы..."
 export DEBIAN_FRONTEND=noninteractive
-apt update -y > /dev/null 2>&1
-apt upgrade -y > /dev/null 2>&1
+sudo apt update -y > /dev/null 2>&1
+sudo apt upgrade -y > /dev/null 2>&1
 success "Система обновлена"
 
 # Шаг 2: Установка пакетов
 log "Установка Nginx, PHP и зависимостей..."
-apt install -y nginx php8.3-fpm php8.3-cli php8.3-curl php8.3-mbstring unzip curl certbot python3-certbot-nginx ufw > /dev/null 2>&1
+sudo apt install -y nginx php8.3-fpm php8.3-cli php8.3-curl php8.3-mbstring unzip curl certbot python3-certbot-nginx ufw > /dev/null 2>&1
 success "Пакеты установлены"
 
 # Шаг 3: Настройка Nginx
 log "Настройка Nginx для домена $DOMAIN..."
-cat > /etc/nginx/sites-available/$DOMAIN <<EOF
+sudo cat > /etc/nginx/sites-available/$DOMAIN <<EOF
 server {
     listen 80;
     listen [::]:80;
