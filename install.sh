@@ -1,11 +1,7 @@
 #!/bin/bash
 
 # SSL Generator Installation Script
-# Usage: 
-#   sudo ./install.sh domain.com email@example.com
-#   curl -sL https://raw.githubusercontent.com/fastbrains13/ssl-generate-letsencrypt/main/install.sh | sudo bash
-
-set -e
+# Usage: sudo ./install.sh
 
 echo "🔐 SSL Generator Installation Script"
 echo "====================================="
@@ -29,44 +25,19 @@ success() { echo -e "${GREEN}✓${NC} $1"; }
 error() { echo -e "${RED}✗${NC} $1"; }
 warn() { echo -e "${YELLOW}⚠${NC} $1"; }
 
-# Получение домена и email
-DOMAIN=$1
-EMAIL=$2
+# Получение домена
+read -p "Введите домен для SSL Generator (например: example.com): " DOMAIN
 
-# Если аргументы не переданы, пробуем прочитать из /dev/tty
 if [ -z "$DOMAIN" ]; then
-    if [ -t 0 ]; then
-        read -p "Введите домен для SSL Generator (например: ssl.example.com): " DOMAIN
-    elif [ -e /dev/tty ]; then
-        read -p "Введите домен для SSL Generator (например: ssl.example.com): " DOMAIN < /dev/tty
-    else
-        error "Домен не указан!"
-        echo ""
-        echo "Использование:"
-        echo "  sudo ./install.sh <домен> <email>"
-        echo "  Пример: sudo ./install.sh fb.fbinfo.ru admin@fbinfo.ru"
-        echo ""
-        echo "Или скачайте и запустите отдельно:"
-        echo "  curl -sL https://raw.githubusercontent.com/fastbrains13/ssl-generate-letsencrypt/main/install.sh -o install.sh"
-        echo "  sudo ./install.sh"
-        exit 1
-    fi
+    error "Домен не указан!"
+    exit 1
 fi
+
+# Получение email
+read -p "Введите email для Let's Encrypt: " EMAIL
 
 if [ -z "$EMAIL" ]; then
-    if [ -t 0 ]; then
-        read -p "Введите email для Let's Encrypt: " EMAIL
-    elif [ -e /dev/tty ]; then
-        read -p "Введите email для Let's Encrypt: " EMAIL < /dev/tty
-    else
-        error "Email не указан!"
-        echo "Использование: sudo ./install.sh <домен> <email>"
-        exit 1
-    fi
-fi
-
-if [ -z "$DOMAIN" ] || [ -z "$EMAIL" ]; then
-    error "Домен и email обязательны!"
+    error "Email не указан!"
     exit 1
 fi
 
@@ -76,9 +47,9 @@ echo "   Домен: $DOMAIN"
 echo "   Email: $EMAIL"
 echo ""
 
-# Получаем IP сервера
-SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || curl -s icanhazip.com 2>/dev/null || echo "unknown")
-log "IP сервера: $SERVER_IP"
+# Получаем IPv4 сервера (принудительно IPv4)
+SERVER_IP=$(curl -4 -s ifconfig.me 2>/dev/null || curl -4 -s icanhazip.com 2>/dev/null || curl -4 -s ipinfo.io/ip 2>/dev/null || echo "unknown")
+log "IPv4 сервера: $SERVER_IP"
 echo ""
 
 # Шаг 1: Обновление системы
@@ -212,7 +183,7 @@ echo "📍 Ваш сайт доступен по адресу:"
 echo "   https://$DOMAIN"
 echo ""
 echo "📝 Следующие шаги:"
-echo "   1. Убедитесь, что DNS запись $DOMAIN указывает на IP: $SERVER_IP"
+echo "   1. Убедитесь, что DNS A-запись $DOMAIN указывает на IPv4: $SERVER_IP"
 echo "   2. Откройте https://$DOMAIN в браузере"
 echo "   3. Выпустите SSL сертификат для нужного домена"
 echo ""
