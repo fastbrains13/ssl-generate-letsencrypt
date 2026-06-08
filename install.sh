@@ -52,12 +52,7 @@ SERVER_IP=$(curl -4 -s ifconfig.me 2>/dev/null || curl -4 -s icanhazip.com 2>/de
 log "IPv4 сервера: $SERVER_IP"
 echo ""
 
-# Шаг 1: Обновление системы
-log "Обновление системы..."
-export DEBIAN_FRONTEND=noninteractive
-sudo apt update -y > /dev/null 2>&1
-sudo apt upgrade -y > /dev/null 2>&1
-success "Система обновлена"
+
 
 # Шаг 2: Установка пакетов
 log "Установка Nginx, PHP и зависимостей..."
